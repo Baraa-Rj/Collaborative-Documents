@@ -209,3 +209,11 @@ Done in a normal browser on https://ajaia-docs-rcya.onrender.com, following the 
   visible to Alice.
 - **Carol:** saw no documents. Opening the doc's URL directly showed "Document not found, or you don't have access
   to it."
+
+## Demo footage for the walkthrough video
+
+- The silent screen recording of the app was captured by the AI with a scripted Playwright browser session against
+  the live URL. It shows every feature in order, with on-screen step captions: create/format, autosave + reload,
+  `.docx` import, `.pdf` rejection, share with validation, Bob editing, Carol getting 404, back to Alice. Recording it
+  also served as one more end-to-end run on production, and every scripted step passed.
+- The narration and code walkthrough in the final video are mine.
