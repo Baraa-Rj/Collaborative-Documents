@@ -76,3 +76,25 @@ I set the plan, locked the architecture decisions up front, and reviewed each ph
   - The hashed JS asset is served with the JavaScript content type.
   - `/api/nope` returns a JSON 404.
   - Both traversal attempts (`/../backend/...` and the `%2e%2e` form) got `index.html`, not source files.
+
+## Neon setup (between Phases 3 and 4)
+
+**Where AI sped things up**
+- Followed Neon's agent instructions (`neon.com/get-started/prompt.md` and the `neon` SKILL.md) to link the existing
+  project and populate env vars with `neon init`.
+
+**AI output changed or rejected**
+- Neon's instructions say `npm i -g neon`. Rejected because of my "no global installs" rule; ran the CLI with
+  `npx neon@latest` instead.
+- `neon init -y` creates a `neon.ts` file and installs npm config dependencies by default. Skipped with `--no-config`,
+  because the backend is Python and doesn't use them.
+- Didn't run `neon mcp` or `neon skills` separately. The Neon skill says not to when `init` already installed the
+  plugin, and the plugin already ships all the skills plus an OAuth MCP server, so a second install would duplicate them.
+
+**How correctness was verified**
+- Checked that `.env.local` (secrets) and `.neon` are gitignored before committing. `neon init` added them itself.
+- Ran the backend against Neon:
+  - The driver resolves to `postgresql+psycopg` and the Neon URL works with `sslmode` and `channel_binding` as-is.
+  - Tables were created and the users seeded. A second startup didn't duplicate them.
+  - Authenticated reads return 200.
+  - A Document insert succeeded inside a transaction that was then rolled back, so no test data was left behind.
