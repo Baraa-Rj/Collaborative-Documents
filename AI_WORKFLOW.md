@@ -56,3 +56,23 @@ I set the plan, locked the architecture decisions up front, and reviewed each ph
 - A full page reload reopened the same doc from the URL hash with its formatting intact.
 - Bob got 404 on Alice's doc. After sharing it (via API), switching to Bob showed it under "Shared with me" with an
   Alice owner badge. Bob's edit autosaved and is visible to Alice.
+
+## Phase 3: Deploy packaging (Docker + Render)
+
+**Where AI sped things up**
+- Generated the multi-stage Dockerfile (Node build → Python runtime, non-root user, `$PORT` from Render),
+  `.dockerignore`, `render.yaml`, and FastAPI's static/SPA serving.
+
+**Decisions made while building**
+- The SPA catch-all route is registered after all API routes. Unknown `/api/*` paths return a JSON 404 instead of
+  `index.html`, so API typos fail loudly.
+- Static file lookup resolves the path and checks it stays inside `dist/`, a guard against `../` traversal.
+- Render region set to Frankfurt to sit next to the Neon DB (eu-central-1).
+
+**How correctness was verified**
+- `docker build` succeeded. Ran the container with `PORT=10000`, mimicking Render, and checked:
+  - `/api/health` returns ok and `/api/users` returns the seeded users.
+  - `/` and a deep link `/some/route` both return `index.html`.
+  - The hashed JS asset is served with the JavaScript content type.
+  - `/api/nope` returns a JSON 404.
+  - Both traversal attempts (`/../backend/...` and the `%2e%2e` form) got `index.html`, not source files.

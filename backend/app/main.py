@@ -1,8 +1,12 @@
 """FastAPI app: all /api routes. Every document route resolves the doc through get_doc_for_user()."""
+import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
+from pathlib import Path
 
 from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -133,3 +137,20 @@ def share_document(
         db.commit()
         db.refresh(doc)
     return to_out(doc, user)
+
+
+# ---- Production: serve the built React app from this same server (one deploy unit, same origin, no CORS).
+# Registered last so every /api route above wins. In local dev, Vite serves the UI instead and dist/ may not exist.
+FRONTEND_DIST = Path(os.getenv("FRONTEND_DIST", Path(__file__).resolve().parents[2] / "frontend" / "dist")).resolve()
+
+if FRONTEND_DIST.is_dir():
+    app.mount("/assets", StaticFiles(directory=FRONTEND_DIST / "assets"), name="assets")
+
+    @app.get("/{path:path}", include_in_schema=False)
+    def spa(path: str):
+        if path == "api" or path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="Not found")  # unknown API path: JSON 404, not the SPA
+        file = (FRONTEND_DIST / path).resolve()
+        if path and file.is_file() and file.is_relative_to(FRONTEND_DIST):  # guard against ../ traversal
+            return FileResponse(file)
+        return FileResponse(FRONTEND_DIST / "index.html")  # SPA fallback

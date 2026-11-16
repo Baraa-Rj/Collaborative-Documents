@@ -1,0 +1,9 @@
+.git
+.venv
+.env
+.claude
+.playwright-mcp
+**/node_modules
+**/__pycache__
+**/*.db
+frontend/dist
