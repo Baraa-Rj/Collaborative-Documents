@@ -60,4 +60,4 @@ how correctness was verified. Never fabricate entries.
 - Blocked >15 min → stop, tell user, propose a cut.
 
 ## Status
-- Phase 1: done (backend). Branch per phase (phase-N-name), pushed, then merged to main. ASSIGNMENT.md still missing — ask user.
+- Phase 1: done (backend). Phase 2: done (frontend). Branch per phase (phase-N-name), pushed, then ff-merged to main. No Co-Authored-By lines in commits. ASSIGNMENT.md still missing — ask user.
