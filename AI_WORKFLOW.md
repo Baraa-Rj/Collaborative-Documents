@@ -3,6 +3,27 @@
 Kept as the work happened (not reconstructed at the end). Tool: Claude Code (Claude Opus 5.5) in VS Code.
 I set the plan, locked the architecture decisions up front, and reviewed each phase before moving on.
 
+## Summary
+
+- **How I worked:** I wrote the plan, stack, data model, API, and an explicit cut list *before* any code, and put
+  them in `CLAUDE.md` so the agent kept to them across context resets. The work ran in six phases. Each ended with a
+  summary, verify commands, and a commit on its own branch, merged to `main`. Render auto-deploys from `main`.
+- **Where AI helped most:** writing boilerplate fast (FastAPI routes, Pydantic schemas, Tiptap toolbar, Dockerfile),
+  writing tests, and *driving a real browser* (Playwright) to catch bugs a type-checker can't.
+- **Bugs caught by verification, not by reading code:**
+  - Opening a doc triggered an autosave.
+  - SQLite returned timestamps without a timezone.
+  - `.txt` imports left a trailing `<br>`.
+  - The Render deploy failed because of a wrong `DATABASE_URL`.
+- **AI output I rejected or changed:**
+  - Global CLI installs (ran via `npx` instead).
+  - Neon's default `neon.ts` + npm config in a Python project (skipped).
+  - A too-realistic example password that caused a failed deploy (lesson recorded below).
+- **How correctness was checked:**
+  - 10 pytest tests, themselves checked by breaking the code on purpose.
+  - Headless-browser runs of the two-user share flow and reload-persistence.
+  - Smoke tests of the Docker image and the live URL.
+
 ## Phase 1: Backend (FastAPI + SQLAlchemy)
 
 **Where AI sped things up**
@@ -163,3 +184,17 @@ I set the plan, locked the architecture decisions up front, and reviewed each ph
 - Disabled the sanitizer (`clean_html` returned its input unchanged) → the XSS test failed.
 - Made `get_doc_for_user` ignore the user → the access and owner-only-share tests failed.
 - Restored the code (`git checkout`) → 10/10 pass. The tests fail when the rules they guard are broken.
+
+## Phase 6: Documentation
+
+**Where AI sped things up**
+- Drafted README, ARCHITECTURE, and SUBMISSION from the plan in `CLAUDE.md`, the commit history, and this log.
+
+**How the docs were checked**
+- Commands were checked against reality before being written down:
+  - FastAPI serves the built frontend on :8000 (`/` and a deep link both return the app).
+  - The test command runs 10 tests, and the Docker image runs.
+  - The live URL works.
+- The file list in SUBMISSION.md was generated from `git ls-files`, not typed by hand.
+- Every statement about behaviour points to something verified above. Where something wasn't verified, the docs say
+  so (see SUBMISSION.md → "Not verified").
