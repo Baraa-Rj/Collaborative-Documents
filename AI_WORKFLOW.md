@@ -144,3 +144,22 @@ I set the plan, locked the architecture decisions up front, and reviewed each ph
 - As the recipient: the doc appears under "Shared with me" with an owner badge and no Share button, and their edit
   autosaved and is visible to the owner.
 - The third user gets 404. The recipient trying to share via the API gets 403.
+
+## Phase 5: Automated tests (pytest)
+
+**Where AI sped things up**
+- Wrote `backend/tests/` (10 tests) with FastAPI TestClient against a throwaway SQLite file. Every test gets a fresh,
+  re-seeded database.
+- Covered:
+  - Bob gets 404 before the share and 200 after, and Carol stays 404.
+  - A non-owner can't share (403). A user with no access gets 404.
+  - Share validation: unknown email or yourself → 400, re-sharing creates no duplicate.
+  - `<script>`, event handlers, `<img>` and `javascript:` links are stripped on both create and update.
+  - Title validation.
+  - `.md` and `.docx` imports keep their formatting, and `.txt` imports are escaped.
+  - Bad files (pdf, no extension, fake docx, binary, non-UTF-8, empty, >2 MB) → 400 with nothing created.
+
+**How the tests themselves were verified (mutation check)**
+- Disabled the sanitizer (`clean_html` returned its input unchanged) → the XSS test failed.
+- Made `get_doc_for_user` ignore the user → the access and owner-only-share tests failed.
+- Restored the code (`git checkout`) → 10/10 pass. The tests fail when the rules they guard are broken.
