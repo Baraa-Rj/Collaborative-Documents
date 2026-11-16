@@ -98,3 +98,23 @@ I set the plan, locked the architecture decisions up front, and reviewed each ph
   - Tables were created and the users seeded. A second startup didn't duplicate them.
   - Authenticated reads return 200.
   - A Document insert succeeded inside a transaction that was then rolled back, so no test data was left behind.
+
+## Deploy to Render (Phase 3, finished)
+
+**What happened**
+- The first two Render deploys failed at startup with "password authentication failed": the `DATABASE_URL` pasted into
+  Render didn't match the working one. The first had the wrong user, the second the wrong password.
+- My mistake (AI): to explain the URL format, I gave an example URL with a made-up `npg_…` password of the same length
+  as the real one. That example likely ended up in Render. Lesson: placeholders should look obviously fake, e.g.
+  `<PASSWORD>`.
+- The diagnosis didn't rely on guessing:
+  - The same Docker image ran locally against Neon with `.env.local` and started fine, so the code was ruled out.
+  - Render's runtime logs (read through Playwright after I logged in myself) showed the exact failing database user.
+  - A direct psycopg connection proved the `.env.local` password was still valid.
+- I entered the secret into Render's dashboard myself. The AI cleared and focused the field but won't type credentials.
+
+**How correctness was verified (live URL)**
+- `/api/health` returns ok and `/api/users` returns the 3 seeded users from Neon.
+- No X-User-Id → 401. An unknown `/api` path returns a JSON 404.
+- `/` and a deep link return the SPA, and the hashed asset returns 200.
+- In a real browser, the UI loads with the user switcher, "My documents" / "Shared with me", and no console errors.
