@@ -1,0 +1,4 @@
+https://ajaia-docs-rcya.onrender.com
+
+Free tier: the first load after ~15 min idle can take ~50s while the server wakes up.
+Demo users (no password, pick in "Signed in as"): alice@ajaia.test, bob@ajaia.test, carol@ajaia.test

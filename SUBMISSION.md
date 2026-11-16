@@ -5,7 +5,21 @@
   phase also has its own `phase-N-*` branch)
 - **Walkthrough video:** see [VIDEO_URL.txt](VIDEO_URL.txt)
 - **Demo users:** Alice / Bob / Carol (`alice@ajaia.test`, `bob@ajaia.test`, `carol@ajaia.test`), chosen in the
-  "Signed in as" menu. This is mock auth, not secure, as stated in the UI and README.
+  "Signed in as" menu. No passwords. This is mock auth, not secure, as stated in the UI and README.
+
+## Google Drive folder contents
+
+| File | What it is |
+|---|---|
+| `source-code.zip` | The full repository at the submitted commit (everything listed under "Files included" below) |
+| `README.md` | Local setup, run and test instructions, live URL, seeded users, supported file types |
+| `ARCHITECTURE.md` | Architecture note: priorities, decisions, tradeoffs, cuts, next 2–4 hours |
+| `AI_WORKFLOW.md` | AI workflow note: tools used, where AI helped, what was changed or rejected, how it was verified |
+| `SUBMISSION.md` | This file |
+| `LIVE_URL.txt` | The live product URL |
+| `VIDEO_URL.txt` | The walkthrough video URL |
+
+No screenshots are included: setup needs no extra steps beyond the README, and the live URL needs no account.
 
 ## What works
 
@@ -57,6 +71,7 @@ Generated from `git ls-files`.
 - `AI_WORKFLOW.md`: how AI was used, what was changed or rejected, how correctness was verified
 - `SUBMISSION.md`: this file
 - `VIDEO_URL.txt`: link to the walkthrough video
+- `LIVE_URL.txt`: link to the live app
 - `CLAUDE.md`: the plan and rules given to the AI coding agent (kept as evidence of the workflow)
 
 **Backend (FastAPI)**
