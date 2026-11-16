@@ -60,4 +60,4 @@ how correctness was verified. Never fabricate entries.
 - Blocked >15 min → stop, tell user, propose a cut.
 
 ## Status
-- LIVE: https://ajaia-docs-rcya.onrender.com (Render srv-dbtjqfc9v7es7397shk0, auto-deploys from main). Phase 1-3 done. Neon project divine-darkness-07907316 linked (secrets in .env.local, gitignored; load with `set -a; . ./.env.local; set +a`). Neon tables+seed created. Branch per phase (phase-N-name), pushed, then ff-merged to main. No Co-Authored-By lines in commits. ASSIGNMENT.md still missing — ask user.
+- LIVE: https://ajaia-docs-rcya.onrender.com (Render srv-dbtjqfc9v7es7397shk0, auto-deploys from main). Phase 1-4 done. Neon project divine-darkness-07907316 linked (secrets in .env.local, gitignored; load with `set -a; . ./.env.local; set +a`). Neon tables+seed created. Branch per phase (phase-N-name), pushed, then ff-merged to main. No Co-Authored-By lines in commits. ASSIGNMENT.md still missing — ask user.

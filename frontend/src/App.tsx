@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, ApiError, setCurrentUser, type DocList, type User } from "./api";
+import { api, ApiError, MAX_IMPORT_BYTES, setCurrentUser, type DocList, type User } from "./api";
 import DocListPanel from "./DocListPanel";
 import Editor from "./Editor";
 
@@ -17,6 +17,7 @@ export default function App() {
   const [docs, setDocs] = useState<DocList | null>(null);
   const [docId, setDocId] = useState<number | null>(docIdFromHash);
   const [error, setError] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
 
   // Load the seeded users once, and restore the last selected user.
   useEffect(() => {
@@ -68,6 +69,24 @@ export default function App() {
     }
   }
 
+  async function importDoc(file: File) {
+    setError(null);
+    if (file.size > MAX_IMPORT_BYTES) {
+      setError(`"${file.name}" is larger than the 2 MB import limit.`);
+      return;
+    }
+    setImporting(true);
+    try {
+      const doc = await api.importDoc(file);
+      refreshDocs();
+      openDoc(doc.id);
+    } catch (e) {
+      setError(`Import failed: ${(e as ApiError).message}`);
+    } finally {
+      setImporting(false);
+    }
+  }
+
   return (
     <div className="app">
       <header className="topbar">
@@ -96,7 +115,14 @@ export default function App() {
       )}
 
       <div className="layout">
-        <DocListPanel docs={docs} activeId={docId} onOpen={openDoc} onCreate={createDoc} />
+        <DocListPanel
+          docs={docs}
+          activeId={docId}
+          importing={importing}
+          onOpen={openDoc}
+          onCreate={createDoc}
+          onImport={importDoc}
+        />
         <main className="main">
           {userId !== null && docId !== null ? (
             // key: remount the editor per (user, doc) so no state leaks between documents or users.

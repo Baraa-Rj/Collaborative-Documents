@@ -118,3 +118,29 @@ I set the plan, locked the architecture decisions up front, and reviewed each ph
 - No X-User-Id → 401. An unknown `/api` path returns a JSON 404.
 - `/` and a deep link return the SPA, and the hashed asset returns 200.
 - In a real browser, the UI loads with the user switcher, "My documents" / "Shared with me", and no console errors.
+
+## Phase 4: Import UI + share dialog
+
+**Where AI sped things up**
+- Built the "Import file" button (with supported types and the 2 MB limit shown under it), a client-side size
+  pre-check, and an owner-only Share dialog with error states and a "Who has access" list.
+- Generated a real minimal `.docx` (OOXML zip with heading styles) plus `.md`/`.txt` samples in `samples/`, so import
+  could be tested for real and reviewers have files to try.
+
+**AI output changed or rejected**
+- **Found in browser testing:** a `.txt` file ending in a newline left a stray `<br>` at the end of the last
+  paragraph. Fixed by trimming newlines from each paragraph in `importers.py`.
+- **Test mistake (AI's, not the app's):** my first share test assumed Alice was signed in, but the test browser
+  remembered Bob from earlier. The app's 400 "You already own this document" was correct. Re-ran the checks with the
+  right user.
+
+**How correctness was verified (browser + API, local)**
+- `.md` → H1/H2, bold, italic, bullet and numbered lists preserved.
+- `.docx` → headings, bold, italic preserved.
+- `.txt` → paragraphs kept and `<b>` shown as literal text.
+- `.pdf` → "Import failed: Unsupported file type" banner, no doc created.
+- Share dialog: unknown email → 400 message. Sharing with yourself → 400. A valid share updates "Who has access",
+  and the email is matched case-insensitively.
+- As the recipient: the doc appears under "Shared with me" with an owner badge and no Share button, and their edit
+  autosaved and is visible to the owner.
+- The third user gets 404. The recipient trying to share via the API gets 403.

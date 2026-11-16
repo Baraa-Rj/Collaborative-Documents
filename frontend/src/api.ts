@@ -49,4 +49,15 @@ export const api = {
   createDoc: () => request<Doc>("/documents", { method: "POST", body: JSON.stringify({}) }),
   updateDoc: (id: number, patch: { title?: string; content_html?: string }) =>
     request<Doc>(`/documents/${id}`, { method: "PATCH", body: JSON.stringify(patch) }),
+  importDoc: (file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+    return request<Doc>("/documents/import", { method: "POST", body: form });
+  },
+  shareDoc: (id: number, email: string) =>
+    request<Doc>(`/documents/${id}/shares`, { method: "POST", body: JSON.stringify({ email }) }),
 };
+
+// Must match the backend (importers.py). The server is the real check; these give fast feedback.
+export const IMPORT_ACCEPT = ".txt,.md,.docx";
+export const MAX_IMPORT_BYTES = 2 * 1024 * 1024;

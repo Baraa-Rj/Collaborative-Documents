@@ -27,7 +27,7 @@ def _decode_text(data: bytes) -> str:
 
 def _txt_to_html(text: str) -> str:
     # Blank lines separate paragraphs; single newlines become <br>.
-    paragraphs = [p for p in text.replace("\r\n", "\n").split("\n\n") if p.strip()]
+    paragraphs = [p.strip("\n") for p in text.replace("\r\n", "\n").split("\n\n") if p.strip()]
     return "".join(f"<p>{html.escape(p).replace(chr(10), '<br>')}</p>" for p in paragraphs)
 
 

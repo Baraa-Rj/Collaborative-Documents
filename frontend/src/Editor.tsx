@@ -2,6 +2,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useRef, useState } from "react";
 import { api, ApiError, type Doc } from "./api";
+import ShareDialog from "./ShareDialog";
 import Toolbar from "./Toolbar";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
@@ -15,6 +16,7 @@ export default function Editor({ docId, onSaved }: { docId: number; onSaved: () 
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false);
 
   // Autosave state lives in refs: it changes on every keystroke and must not trigger re-renders.
   const pending = useRef<Patch>({});
@@ -105,7 +107,13 @@ export default function Editor({ docId, onSaved }: { docId: number; onSaved: () 
           onBlur={() => titleInvalid && setTitle(doc.title)}
         />
         <SaveIndicator status={status} error={saveError} onRetry={flush} />
+        {doc.is_owner && (
+          <button className="secondary-inline" onClick={() => setSharing(true)}>
+            Share
+          </button>
+        )}
       </div>
+      {sharing && <ShareDialog doc={doc} onClose={() => setSharing(false)} onShared={setDoc} />}
       <p className="doc-info muted">
         Owner: {doc.is_owner ? "you" : doc.owner.name}
         {doc.shared_with.length > 0 && <> · Shared with {doc.shared_with.map((u) => u.name).join(", ")}</>}

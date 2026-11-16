@@ -1,18 +1,38 @@
-import type { DocList, DocSummary } from "./api";
+import { useRef } from "react";
+import { IMPORT_ACCEPT, type DocList, type DocSummary } from "./api";
 
 type Props = {
   docs: DocList | null;
   activeId: number | null;
+  importing: boolean;
   onOpen: (id: number) => void;
   onCreate: () => void;
+  onImport: (file: File) => void;
 };
 
-export default function DocListPanel({ docs, activeId, onOpen, onCreate }: Props) {
+export default function DocListPanel({ docs, activeId, importing, onOpen, onCreate, onImport }: Props) {
+  const fileInput = useRef<HTMLInputElement>(null);
+
   return (
     <aside className="sidebar">
       <button className="primary" onClick={onCreate}>
         + New document
       </button>
+      <button className="secondary" onClick={() => fileInput.current?.click()} disabled={importing}>
+        {importing ? "Importing…" : "Import file"}
+      </button>
+      <input
+        ref={fileInput}
+        type="file"
+        accept={IMPORT_ACCEPT}
+        hidden
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          e.target.value = ""; // allow picking the same file again after an error
+          if (file) onImport(file);
+        }}
+      />
+      <p className="hint">Supported: .txt, .md, .docx (max 2 MB). Imports become a new document you own.</p>
       {docs === null ? (
         <p className="muted">Loading…</p>
       ) : (
