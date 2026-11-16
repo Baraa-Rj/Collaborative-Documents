@@ -18,6 +18,7 @@
 | `SUBMISSION.md` | This file |
 | `LIVE_URL.txt` | The live product URL |
 | `VIDEO_URL.txt` | The walkthrough video URL |
+| `ajaia-docs-walkthrough.mp4` | The walkthrough video itself (~4 min, AI-narrated, disclosed) |
 
 No screenshots are included: setup needs no extra steps beyond the README, and the live URL needs no account.
 

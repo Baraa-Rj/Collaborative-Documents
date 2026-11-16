@@ -210,10 +210,24 @@ Done in a normal browser on https://ajaia-docs-rcya.onrender.com, following the 
 - **Carol:** saw no documents. Opening the doc's URL directly showed "Document not found, or you don't have access
   to it."
 
-## Demo footage for the walkthrough video
+## Walkthrough video: AI-recorded and AI-narrated (disclosed)
 
-- The silent screen recording of the app was captured by the AI with a scripted Playwright browser session against
-  the live URL. It shows every feature in order, with on-screen step captions: create/format, autosave + reload,
-  `.docx` import, `.pdf` rejection, share with validation, Bob editing, Carol getting 404, back to Alice. Recording it
-  also served as one more end-to-end run on production, and every scripted step passed.
-- The narration and code walkthrough in the final video are mine.
+- **I asked Claude to record and narrate the walkthrough.** The video says so on its opening card, says so aloud, and
+  shows an "AI-narrated walkthrough" badge throughout. The voice is a stock synthetic voice (Microsoft Edge TTS
+  `en-US-GuyNeural` via the `edge-tts` package), not a clone of my voice, and it refers to me in the third person.
+- **How it was made:**
+  - A scripted Playwright session against the live URL showed every feature:
+    - create, rename and format
+    - autosave and reload
+    - `.docx` import and `.pdf` rejection
+    - sharing with validation
+    - Bob editing, and Carol getting a 404
+  - Slides were generated from the real repo files: the `access.py`, `sanitize.py` and `Editor.tsx` excerpts, real
+    `pytest -v` output, and the cuts table from ARCHITECTURE.md.
+  - Each narration clip was placed at the recorded start time of its section, and A/V sync was checked frame by frame.
+- **Also a production run:** recording it was one more end-to-end pass on the live site, and every scripted step
+  passed.
+- **An earlier silent 70-second capture** had a screen-capture glitch (a grey band for about 9 seconds). That glitch
+  didn't recur in the final recording.
+- **Ownership:** the scope decisions, the plan in CLAUDE.md, and the review of each phase are mine. I'm accountable
+  for everything the narration says, and I can explain any part of the code.
