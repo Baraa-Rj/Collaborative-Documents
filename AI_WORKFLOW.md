@@ -198,3 +198,14 @@ I set the plan, locked the architecture decisions up front, and reviewed each ph
 - The file list in SUBMISSION.md was generated from `git ls-files`, not typed by hand.
 - Every statement about behaviour points to something verified above. Where something wasn't verified, the docs say
   so (see SUBMISSION.md → "Not verified").
+
+## Manual check on the live site (done by me, 2026-11-16, ~19:55)
+
+Done in a normal browser on https://ajaia-docs-rcya.onrender.com, following the README tour. All steps worked:
+- **Alice:** imported `samples/meeting-notes.md`, and the formatting was preserved. Edited and renamed the doc, saw
+  *Saving… → Saved*, and after a page refresh the edit and title were still there.
+- **Alice:** shared the doc with `bob@ajaia.test`, and Bob appeared under "Who has access".
+- **Bob:** the doc showed under "Shared with me" with an Alice badge and no Share button. Bob's edit saved and was
+  visible to Alice.
+- **Carol:** saw no documents. Opening the doc's URL directly showed "Document not found, or you don't have access
+  to it."

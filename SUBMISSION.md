@@ -37,7 +37,7 @@ Known limitations:
 ## Not verified
 
 - Imports were tested with the generated sample `.docx` in `samples/`, not with a wide range of real Word files.
-- The UI was exercised in Chromium only. Other browsers and mobile layouts weren't tested.
+- The UI was exercised in Chromium (scripted) and in my own browser on the live site (manual two-user check, see AI_WORKFLOW.md). Other browsers and mobile layouts weren't tested.
 
 ## Next steps
 
